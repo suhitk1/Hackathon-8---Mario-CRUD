@@ -3,7 +3,7 @@ const app = express()
 const bodyParser = require("body-parser");
 const marioModel = require('./models/marioChar');
 //const { Mongoose } = require('mongoose');
-const marioModel = Mongoose.model('marioCharacter', mario);
+//const marioModel = Mongoose.model('marioCharacter', mario);
 
 // Middlewares
 app.use(express.urlencoded());
@@ -15,13 +15,13 @@ app.use(bodyParser.json())
 
 // your code goes here
 
-app.get('/mario',(request,response) =>{
+app.get('/mario',async (request,response) =>{
     response.send(await marioModel.find());
 });
 
-app.get('/mario/:id',(request,response)=>{
-    const id= req.params.id;
-   try{ const foundId = marioModel.findOne(id);
+app.get('/mario/:id',async (request,response)=>{
+    const id= request.params.id;
+   try{ const foundId = await marioModel.findOne(id);
     if(foundId == null){
         response.status(400).send('ID not found');
     }else{
