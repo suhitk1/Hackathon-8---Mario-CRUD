@@ -42,9 +42,7 @@ app.post('/mario', async (request, response) => {
     } = request.body;
     try {
         if (name.trim().length === 0 || weight.trim().length === 0) {
-            response.status(400).send({
-                message: 'either name or weight is missing'
-            });
+            response.status(400).send({message: 'either name or weight is missing'});
             return;
         }
         const mario = new marioModel({
@@ -57,9 +55,7 @@ app.post('/mario', async (request, response) => {
             weight: weight
         });
     } catch (e) {
-        response.status(400).send({
-            message: 'either name or weight is missing'
-        });
+        response.status(400).send({message: 'either name or weight is missing'});
     }
 });
 
