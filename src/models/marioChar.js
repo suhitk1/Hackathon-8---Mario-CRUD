@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const marioModel = new mongoose.Schema({
+const marioModel = mongoose.Schema({
     name: String,
     weight: Number
 });
