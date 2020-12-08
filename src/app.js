@@ -34,14 +34,14 @@ app.get('/mario/:id', async (request, response) => {
         });
     }
 });
-
+//const nullOrUndefined = (val) => {(val == null) || (val == undefined)};
 app.post('/mario', async (request, response) => {
     let {
         name,
         weight
     } = request.body;
     try {
-        if (name.trim().length === 0 || weight.trim().length === 0) {
+        if (name === null || name === undefined || weight === null || weight === undefined) {
             response.status(400).send({message: 'either name or weight is missing'});
             return;
         }
