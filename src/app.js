@@ -41,7 +41,7 @@ app.post('/mario',async (request,response)=>{
         name: name,
         weight: weight
     });
-    mario.save();
+    await mario.save();
     response.status(201).send({
         name: name,
         weight: weight
@@ -50,37 +50,40 @@ app.post('/mario',async (request,response)=>{
     }
 });
 
-// app.patch('/mario/:id',(req,res)=>{
-//     const id= req.params.id;
-//     const {name,weight}= req.body;
-//     let newObj;
-//     if(name && weight){
-//         newObj= {name: name, weight: weight};
-//     }
-//     else if(!name && weight){
-//         newObj= {weight: weight};
-//     }
-//     else if(!weight && name){
-//         newObj= {name: name};
-//     }
-//     else{
-//         marioModel.findById(id,(error,result)=> {
-//             if(error){
-//                 res.status(400).json({message: error.message});
-//                 return;
-//             }
-//             res.json(result);
-//         })
-//         return;
-//     }
-//     marioModel.findByIdAndUpdate(id,newObj,{new: true},(error,result)=>{
-//         if(error){
-//             res.status(400).json({message: error.message});
-//             return;
-//         }
-//         res.json(result);
-//     })
-// })
+app.patch('/mario/:id',async (request,response)=>{
+    const id = request.params.id;
+    try{ const foundId = await marioModel.findById(id);
+        if(foundId == null){
+            response.status(400).send({message: error.message});
+        }else{
+            const {name,weight} = request.body;
+            let newObj;
+            if(name && weight){
+                newObj= {name: name, weight: weight};
+            }
+            else if(!name && weight){
+                newObj= {weight: weight};
+            }
+            else if(!weight && name){
+                newObj= {name: name};
+            }else{
+                response.status(400).send({message: error.message});
+                return;
+            }
+            const update = await marioModel.findOneAndUpdate(id, newObj,{returnOriginal:false});
+            response.send(update);
+        }}catch(error){
+            response.status(400).send({message:error.message});
+        }
+    
+    // marioModel.findByIdAndUpdate(id,newObj,{new: true},(error,result)=>{
+    //     if(error){
+    //         res.status(400).json({message: error.message});
+    //         return;
+    //     }
+    //     res.json(result);
+    // })
+})
 
 app.delete('/mario/:id',async (request,response)=>{
     const id= request.params.id;
