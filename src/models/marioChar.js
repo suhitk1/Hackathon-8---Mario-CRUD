@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
-const marioModel = mongoose.Schema({
+const marioModel = new mongoose.Schema({
     name: String,
     weight: Number
 });
 
 
-module.exports = mongoose.model('marioCharacter',marioModel);
+module.exports = mongoose.model('mariochar',marioModel);
