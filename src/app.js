@@ -21,7 +21,7 @@ app.get('/mario',async (request,response) =>{
 
 app.get('/mario/:id',async (request,response)=>{
     const id= request.params.id;
-   try{ const foundId = await marioModel.findOne(id);
+   try{ const foundId = await marioModel.findById(id);
     if(foundId == null){
         response.status(400).send('ID not found');
     }else{
@@ -31,19 +31,24 @@ app.get('/mario/:id',async (request,response)=>{
     }
 });
 
-// app.post('/mario',(req,res)=>{
-//     let {name,weight} = req.body;
-//     if (!name || !weight) {
-//         res.statusCode = 400;
-//         res.json({ message: 'either name or weight is missing' });
-//         return;
-//     }
-//     const mario = new marioModel({
-//         name: name,
-//         weight: weight
-//     })
-//     mario.save().then((ans) => res.status(201).json(ans));
-// })
+app.post('/mario',async (request,response)=>{
+    let {name,weight} = request.body;
+    try{if (name.trim().length === 0 || weight.trim().length === 0) {
+        response.status(400).send({ message: 'either name or weight is missing' });
+        return;
+    }
+    const mario = new marioModel({
+        name: name,
+        weight: weight
+    });
+    mario.save();
+    response.status(201).send({
+        name: name,
+        weight: weight
+    });}catch(e){
+        response.status(400).send({ message: 'either name or weight is missing' });
+    }
+});
 
 // app.patch('/mario/:id',(req,res)=>{
 //     const id= req.params.id;
@@ -77,13 +82,18 @@ app.get('/mario/:id',async (request,response)=>{
 //     })
 // })
 
-// app.delete('/mario/:id',(req,res)=>{
-//     const id= req.params.id;
-//     marioModel.findByIdAndDelete(id).then(_=>{
-//         res.status(200).json({message: "character deleted"});
-//     }).catch(error=>{
-//         res.status(400).json({message: error.message});
-//     })
-// })
+app.delete('/mario/:id',async (request,response)=>{
+    const id= request.params.id;
+    try{const res = await marioModel.findById(id);
+        if(res == null){
+            response.status(400).send({message: error.message})
+        }else{
+            await marioModel.findByIdAndDelete(id);
+            response.status(200).send({message: 'character deleted'});
+        }
+    }catch(error){
+        response.status(400).send({message: error.message});
+    }
+});
 
 module.exports = app;
