@@ -52,7 +52,7 @@ app.post('/mario', async (request, response) => {
         await mario.save();
         response.status(201).send({
             name: name,
-            weight: weight
+            weight: Number(weight)
         });
     } catch (e) {
         response.status(400).send({message: 'either name or weight is missing'});
